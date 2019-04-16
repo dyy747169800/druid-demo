@@ -1,0 +1,77 @@
+## 单数据源
+#spring:
+#  datasource:
+#    url: jdbc:mysql://192.168.100.13:3306/test?characterEncoding=utf8
+#    username: root
+#    password: EsOU0NPbS61Ueh3/q0BclFnrBuyq7bJpCeNWc0OQQCAgOpjaYSjxaj+QFtGnLc19r6tb8mHPobB9Fkg/GtuPvg==
+#    druid:
+#      connect-properties:
+#        config.decrypt: true
+#        config.decrypt.key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJzTjmYKEDKC+wrCViinHskTIcIoFZ7CEhOtCxA/e7x1vsKycqOd8hzo9TuoUL10jVR0GStwjHLlP1c5RNKdmD8CAwEAAQ==
+#      filter:
+#        config:
+#          enabled: true
+
+
+## 多数据源
+spring:
+  #排除自动配置DataSource
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  datasource:
+    druid:
+
+        master:
+          url: jdbc:mysql://192.168.100.13:3306/test?characterEncoding=utf8
+          username: root
+          password: CRpLYl4KNNJsezwHmtQwrQut9Xej+rGJSZ4xzZnegz2lLVjVEL4+Dtp718M0A7WZYTqzDmUhKIEHby2ngLBzTg==
+          maxActive: 20
+          initialSize: 1
+          maxWait: 60000
+          minIdle: 1
+          connect-properties:
+            #表示需要解密
+            config.decrypt: true
+            #解密的public-key
+            config.decrypt.key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALbE1LQPgx1SxMVWKIpI371+BxEsO9+hdfMKoNPJx6eIG5VJQam515s21Mfsl9CeBaPwj4LPFsV1NjcQPTkmEssCAwEAAQ==
+          ## 使用ConfigFilter解密
+          filters: config
+
+        slave:
+          url: jdbc:mysql://192.168.100.13:3306/test2?characterEncoding=utf8
+          username: root
+          password: Qaumi0GjY8rNjzSpW6q2mUtcyr9Kb+1Bts68+S/86FzOwWTQlsxAwsgNP3MfLQWxtlAxKAfRvjEw1qcXbEysLQ==
+          maxActive: 20
+          initialSize: 1
+          maxWait: 60000
+          minIdle: 1
+          connect-properties:
+            config.decrypt: true
+            config.decrypt.key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAImsE1BWexgcBM2wEYp+ogM8kdMpEa94x2mw7PvntbCDpcFA6afBTIo+mEEVi3cfzIx1qjWy9S2aZUj4KGyKzfsCAwEAAQ==
+          ## 使用ConfigFilter解密
+          filters: config
+        ## 监控
+        web-stat-filter:
+          url-pattern: /*
+        stat-view-servlet:
+          url-pattern: /druid/*
+          enabled: true
+
+#mybatis
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*/*.xml
+  configuration:
+    cache-enabled: true
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: false
+    multiple-result-sets-enabled: true
+    use-column-label: true
+    use-generated-keys: false
+    default-statement-timeout: 25000
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+
+#日志
+logging.level:
+  root: error
+  com.example: trace
